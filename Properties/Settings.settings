@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DominionsManager.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SaveGameDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Work\Razni solutioni\DominionsManager\SaveGameLocation</Value>
+    </Setting>
+    <Setting Name="GameName" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Value>
+    </Setting>
+    <Setting Name="TurnMail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">turns@llamaserver.net</Value>
+    </Setting>
+    <Setting Name="MyMail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">your@mail.com</Value>
+    </Setting>
+    <Setting Name="Dom4exe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"full path to dom4.exe"</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
