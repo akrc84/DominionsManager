@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -139,7 +140,11 @@ namespace DominionsManager
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string x = ((System.Windows.Forms.ListBox)sender).SelectedItem.ToString();
+            var listBox = sender as ListBox;
+            if (listBox.SelectedItem == null)
+                return;
+
+            string x = listBox.SelectedItem.ToString();
 
             LoadGameTurns(x);
         }
@@ -187,8 +192,17 @@ namespace DominionsManager
 
         private void btn_playDom4_Click(object sender, EventArgs e)
         {
-            //TODO start game with game to load
-            // something something dom4.exe [gameName]?
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = false;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = Properties.Settings.Default.Dom4exe;
+
+            if (this.listBox1.SelectedItem != null)
+            {
+                startInfo.Arguments = this.listBox1.SelectedItem.ToString();
+            }
+
+            Process.Start(startInfo);
         }
     }
 }
