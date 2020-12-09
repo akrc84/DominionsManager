@@ -18,6 +18,6 @@ namespace DominionsManager
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DominionsManager());
         }
-    }
+    } 
 }
 // [END gmail_quickstart]
