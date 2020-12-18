@@ -152,8 +152,8 @@ namespace DominionsManager
         private void LoadGameTurns(string gameName)
         {
             listBox2.Items.Clear();
-
-            string targetDir = Path.Combine(Properties.Settings.Default.SaveGameDir, gameName);
+            
+            string targetDir = Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), gameName);
 
             if (!Directory.Exists(targetDir))
             {

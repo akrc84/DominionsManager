@@ -19,15 +19,15 @@ namespace DominionsManager
         /// </summary>
         public int LastTurn
         {
-            
+
             get
             {
                 int i = 0;
                 //needs rewrite
-                foreach (string item in Directory.GetFiles(Path.Combine(Properties.Settings.Default.SaveGameDir, GameName), "*.trn.*"))
+                foreach (string item in Directory.GetFiles(Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), GameName), "*.trn.*"))
                 {
                     int x = 0;
-                    if (int.TryParse(new FileInfo(item).Extension.Replace(".","").ToString(), out x))
+                    if (int.TryParse(new FileInfo(item).Extension.Replace(".", "").ToString(), out x))
                     {
                         if (i < x)
                         {
@@ -71,7 +71,7 @@ namespace DominionsManager
         {
             get
             {
-                foreach (string item in Directory.GetFiles(Path.Combine(Properties.Settings.Default.SaveGameDir, GameName), "*.2h"))
+                foreach (string item in Directory.GetFiles(Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), GameName), "*.2h"))
                 {
                     return new FileInfo(item);
                 }
@@ -97,7 +97,7 @@ namespace DominionsManager
 
         internal void SaveGameFoder(bool isLatestTurn)
         {
-            string targetDir = System.IO.Path.Combine(Properties.Settings.Default.SaveGameDir, this.GameName);
+            string targetDir = System.IO.Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), this.GameName);
 
             if (isLatestTurn)
                 System.IO.File.WriteAllBytes(System.IO.Path.Combine(targetDir, this.Data.fileName), this.Data.data);
