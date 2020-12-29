@@ -66,26 +66,38 @@ namespace DominionsManager
             string gameName = this.listBox1.SelectedItem.ToString();
             GameTurnInfo gti = new GameTurnInfo(gameName);
 
-
-
-            List<GameTurnInfo> mailsomething = GmailClient.GetMail(gameName, gti.LastTurn + 1);
-
-            if (mailsomething.Count == 0)
+            try
             {
-                MessageBox.Show(this, "No new turn available for " + gameName);
-                return;
+                Cursor.Current = Cursors.WaitCursor;
+
+                List<GameTurnInfo> mailsomething = GmailClient.GetMail(gameName, gti.LastTurn + 1);
+
+                if (mailsomething.Count == 0)
+                {
+                    MessageBox.Show(this, "No new turn available for " + gameName);
+                    return;
+                }
+
+                mailsomething.Sort();
+
+                var lastTurn = mailsomething.Last();
+                lastTurn.SaveGameFoder(true);
+
+                foreach (GameTurnInfo gameTurnInfo in mailsomething)
+                {
+                    gameTurnInfo.SaveGameFoder(false);
+                }
+
+                LoadGameTurns(gameName);
             }
-
-            mailsomething.Sort();
-
-            var lastTurn = mailsomething.Last();
-            lastTurn.SaveGameFoder(true);
-
-            foreach (GameTurnInfo gameTurnInfo in mailsomething)
+            catch (Exception)
             {
-                gameTurnInfo.SaveGameFoder(false);
+                throw;
             }
-            LoadGameTurns(gameName);
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private void btnRemoveGame_Click(object sender, EventArgs e)
@@ -152,7 +164,7 @@ namespace DominionsManager
         private void LoadGameTurns(string gameName)
         {
             listBox2.Items.Clear();
-            
+
             string targetDir = Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), gameName);
 
             if (!Directory.Exists(targetDir))
@@ -161,17 +173,26 @@ namespace DominionsManager
                 return;
             }
 
+            List<GameTurnInfo> gameTurnInfos = new List<GameTurnInfo>();
+
             string[] fileEntries = System.IO.Directory.GetFiles(targetDir);
+
             foreach (string fileName in fileEntries)
             {
                 FileInfo fileInfo = new FileInfo(fileName);
-                ProcessSaveGameFile(fileInfo);
-            }
-        }
+                GameTurnInfo gameTurnInfo = new GameTurnInfo(gameName, fileInfo);
 
-        private void ProcessSaveGameFile(FileInfo fileInfo)
+                if (gameTurnInfo.Turn > 0)
+                    gameTurnInfos.Add(gameTurnInfo);
+            }
+
+            this.listBox2.Items.AddRange(gameTurnInfos.OrderByDescending(i => i).ToArray());
+        }
+        private void ProcessSaveGameFile(FileInfo fileInfo, string gameName)
         {
-            listBox2.Items.Add(fileInfo.Name);
+            GameTurnInfo gameTurnInfo = new GameTurnInfo(gameName, fileInfo);
+            listBox2.Items.Add(gameTurnInfo);
+            //listBox2.Items.Add(fileInfo.Name);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -184,10 +205,25 @@ namespace DominionsManager
         private void SendGameTurn(string x)
         {
             string gameName = this.listBox1.SelectedItem.ToString();
-
+            
             GameTurnInfo gameTurnInfo = new GameTurnInfo(gameName);
 
-            GmailClient.SendMail(gameTurnInfo);
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                GmailClient.SendMail(gameTurnInfo);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+            
+
+            MessageBox.Show(string.Format("Mail sent for game {0} turn {1}", gameTurnInfo.GameName, gameTurnInfo.LastTurn.ToString()));
         }
 
         private void btn_playDom4_Click(object sender, EventArgs e)
@@ -200,6 +236,11 @@ namespace DominionsManager
             if (this.listBox1.SelectedItem != null)
             {
                 startInfo.Arguments = this.listBox1.SelectedItem.ToString();
+            }
+
+            if (this.listBox2.SelectedItem.ToString() != string.Empty)
+            {
+
             }
 
             Process.Start(startInfo);

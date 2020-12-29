@@ -63,6 +63,20 @@ namespace DominionsManager
             Data = data;
         }
 
+        public GameTurnInfo(string gameName, FileInfo saveFileInfo)
+        {
+            if (!int.TryParse(saveFileInfo.Extension.Replace(".",""), out Turn))
+            {
+                Turn = -1;
+            }
+
+            GameName = gameName;
+
+            Data = new GameAttachment();
+
+            Data.fileName = saveFileInfo.FullName;
+        }
+
 
         /// <summary>
         /// Returns file game turn commands (.2h)
@@ -92,7 +106,7 @@ namespace DominionsManager
 
         public override string ToString()
         {
-            return GameName + " " + Turn.ToString();
+            return "Turn " + (Turn.ToString().PadLeft(2,'0'));
         }
 
         internal void SaveGameFoder(bool isLatestTurn)
