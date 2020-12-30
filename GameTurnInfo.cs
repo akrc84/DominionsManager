@@ -94,7 +94,31 @@ namespace DominionsManager
             }
         }
 
+        public FileInfo CurrentTurnFile
+        {
+            get
+            {
+                foreach (string item in Directory.GetFiles(Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), GameName), "*." + this.Turn.ToString()))
+                {
+                    return new FileInfo(item);
+                }
 
+                return null;
+            }
+        }
+
+        public FileInfo TurnFile
+        {
+            get
+            {
+                foreach (string item in Directory.GetFiles(Path.Combine(Environment.ExpandEnvironmentVariables(Properties.Settings.Default.SaveGameDir), GameName), "*.trn"))
+                {
+                    return new FileInfo(item);
+                }
+
+                return null;
+            }
+        }
 
         public int CompareTo(GameTurnInfo other)
         {

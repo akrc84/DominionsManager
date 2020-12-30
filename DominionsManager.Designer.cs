@@ -109,9 +109,9 @@
             // 
             this.btn_playDom4.Location = new System.Drawing.Point(316, 166);
             this.btn_playDom4.Name = "btn_playDom4";
-            this.btn_playDom4.Size = new System.Drawing.Size(108, 23);
+            this.btn_playDom4.Size = new System.Drawing.Size(108, 44);
             this.btn_playDom4.TabIndex = 7;
-            this.btn_playDom4.Text = "Launch Dominions";
+            this.btn_playDom4.Text = "Launch Dominions (Load Turn)";
             this.btn_playDom4.UseVisualStyleBackColor = true;
             this.btn_playDom4.Click += new System.EventHandler(this.btn_playDom4_Click);
             // 

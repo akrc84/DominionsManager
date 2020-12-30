@@ -205,7 +205,7 @@ namespace DominionsManager
         private void SendGameTurn(string x)
         {
             string gameName = this.listBox1.SelectedItem.ToString();
-            
+
             GameTurnInfo gameTurnInfo = new GameTurnInfo(gameName);
 
             try
@@ -221,7 +221,7 @@ namespace DominionsManager
             {
                 Cursor.Current = Cursors.Default;
             }
-            
+
 
             MessageBox.Show(string.Format("Mail sent for game {0} turn {1}", gameTurnInfo.GameName, gameTurnInfo.LastTurn.ToString()));
         }
@@ -238,9 +238,11 @@ namespace DominionsManager
                 startInfo.Arguments = this.listBox1.SelectedItem.ToString();
             }
 
-            if (this.listBox2.SelectedItem.ToString() != string.Empty)
+            if (this.listBox2.SelectedItem.GetType() == typeof(GameTurnInfo))
             {
+                GameTurnInfo x = this.listBox2.SelectedItem as GameTurnInfo;
 
+                x.CurrentTurnFile.CopyTo(x.TurnFile.FullName, true);
             }
 
             Process.Start(startInfo);
