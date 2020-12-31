@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,6 +29,9 @@ namespace DominionsManager
             gameNames = Properties.Settings.Default.GameName;
 
             ListGameNames();
+
+            if (this.listBox1.Items.Count > 0)
+                this.listBox1.SelectedItem = this.listBox1.Items[0];
         }
 
         //TODO make something better than shity list
@@ -158,10 +162,17 @@ namespace DominionsManager
 
             string x = listBox.SelectedItem.ToString();
 
-            LoadGameTurns(x);
+            if (LoadGameTurns(x))
+                RefreshWebGameStatus(x);
+
         }
 
-        private void LoadGameTurns(string gameName)
+        private void RefreshWebGameStatus(string x)
+        {
+            this.webBrowser1.Url = new System.Uri(string.Format(@"http://www.llamaserver.net/gameinfo.cgi?game={0}", x));
+        }
+
+        private bool LoadGameTurns(string gameName)
         {
             listBox2.Items.Clear();
 
@@ -169,8 +180,12 @@ namespace DominionsManager
 
             if (!Directory.Exists(targetDir))
             {
-                MessageBox.Show("Game directory missing " + targetDir);
-                return;
+                var x = MessageBox.Show("Game directory missing " + targetDir + ". Create directory?", "Directory not found", MessageBoxButtons.YesNoCancel);
+                
+                if (x == DialogResult.Yes)
+                    System.IO.Directory.CreateDirectory(targetDir);
+                else
+                    return false;
             }
 
             List<GameTurnInfo> gameTurnInfos = new List<GameTurnInfo>();
@@ -187,6 +202,8 @@ namespace DominionsManager
             }
 
             this.listBox2.Items.AddRange(gameTurnInfos.OrderByDescending(i => i).ToArray());
+
+            return true;
         }
         private void ProcessSaveGameFile(FileInfo fileInfo, string gameName)
         {
